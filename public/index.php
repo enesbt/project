@@ -66,6 +66,7 @@ unset($qrManager);
                     <th>Kod</th>
                     <th>Link</th>
                     <th>Kullanıcı Adı</th>
+                    <th>Count</th>
                     <th>İşlemler</th>
 
                 </tr>
@@ -84,6 +85,7 @@ unset($qrManager);
                         <td><?php echo htmlspecialchars($record['unique_code']); ?></td>
                         <td><a href="<?php echo htmlspecialchars($record['link']); ?>" target="_blank">Linki Aç</a></td>
                         <td><?php echo htmlspecialchars($record['user_name']); ?></td>
+                        <td><?php echo htmlspecialchars($record['scan_count']); ?></td>
                         <td>
                             <a href="edit.php?unique_code=<?php echo urlencode($record['unique_code']); ?>" class="btn btn-warning">Düzenle</a>
                             <a href="delete.php?unique_code=<?php echo urlencode($record['unique_code']); ?>" class="btn btn-danger" onclick="return confirm('Bu kaydı silmek istediğinizden emin misiniz?');">Sil</a>
