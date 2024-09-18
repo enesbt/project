@@ -8,12 +8,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_info'])) {
     $qrlink = $_POST['qrlink']; 
     $description = $_POST['description'];  
     $logoPath = null;
-    $qr = new Qr($description,$qrlink,"user",$logoPath);
-    $uniqueCode = $qr->getUniqueCode();
     if (isset($_FILES['logo']) && $_FILES['logo']['error'] === UPLOAD_ERR_OK) {
         $logoTmpName = $_FILES['logo']['tmp_name'];
         $logoExtension = pathinfo($_FILES['logo']['name'], PATHINFO_EXTENSION);
-        $logoPath = "../storage/tmp/logo.$uniqueCode.$logoExtension";
+        $logoPath = "../storage/tmp/logo.$logoExtension";
         if (in_array($logoExtension, ['png']))
             move_uploaded_file($logoTmpName, $logoPath);
     } 
@@ -25,9 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_info'])) {
         header('Location: generate.php?status=error&message=Geçerli bir URL giriniz.');
         exit();
     }
-    if ($qr->setLogoPath($logoPath))
-        $qr->setLogoPath($logoPath);
-
+    $qr = new Qr($description,$qrlink,"user",$logoPath);
+    $uniqueCode = $qr->getUniqueCode();
     if($qr->saveQrCode())
         header('Location: index.php?status=success&code=' . urlencode($uniqueCode));
     else
