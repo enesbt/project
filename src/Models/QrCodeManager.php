@@ -12,10 +12,11 @@ class QrCodeManager{
     }
     public function saveQrCode($unique_code, $qr_code_png, $qr_code_svg, $description, $link, $user_name){
         $createdAt = date('Y-m-d');
-        $sql = "INSERT INTO qr_records (created_at, unique_code, qr_code_png, qr_code_svg, description, link, user_name) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO qr_records (created_at, unique_code, qr_code_png, qr_code_svg, description, link, user_name, scan_count) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->db->prepare($sql);
         if ($stmt) {
-            $stmt->bind_param('sssssss', $createdAt, $unique_code, $qr_code_png,$qr_code_svg, $description, $link, $user_name);
+            $scan_count = 0;
+            $stmt->bind_param('ssssssss', $createdAt, $unique_code, $qr_code_png, $qr_code_svg, $description, $link, $user_name, $scan_count);
             return $stmt->execute();
         } else {
             echo "Prepare failed: " . $this->db->error;
@@ -134,5 +135,12 @@ class QrCodeManager{
         $stmt->execute();
         $result = $stmt->get_result();
         return $result->fetch_assoc();
+    }
+    public function incrementScanCount($uniqueCode)
+    {
+        $sql = "UPDATE qr_records SET scan_count = scan_count + 1 WHERE unique_code = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param('s', $uniqueCode);
+        $stmt->execute();
     }
 }
