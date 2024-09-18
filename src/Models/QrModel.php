@@ -47,6 +47,7 @@ class QRImageWithLogo extends QRGdImagePNG{
 
 
 
+
 class QrModel{
     private $db;
     public function __construct() {
@@ -107,7 +108,7 @@ class QrModel{
         }
     }
     public static function generateCustomString($length = 5) {
-        $characters = 'ABCDEFGHJKMNPQRSTVWXYZ1234567890';
+        $characters = 'ABCDEFGHJKMNPQRSTVWXYZ1234567890abcdefghijklmnopqrstuvwxyz';
         $charactersLength = strlen($characters);
         $randomString = '';
 
