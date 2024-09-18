@@ -33,7 +33,6 @@ class Qr{
     public function getUniqueCode(){
         return $this->unique_code;
     }
-  
     public function saveQrCode(){
         $qrmanager= new QrCodeManager();
         return $qrmanager->saveQrCode($this->unique_code, $this->qr_code_png, $this->qr_code_svg, $this->description, $this->link, $this->user_name);
