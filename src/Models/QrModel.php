@@ -156,7 +156,7 @@ class QrModel{
         $options->version              = 5;
         $options->outputBase64         = true;
         $options->svgUseFillAttributes = false;
-        $options->drawCircularModules  = true;
+        $options->drawCircularModules  = false;
         $options->circleRadius         = 0.4;
         $options->connectPaths         = true;
         $options->keepAsSquare         = [

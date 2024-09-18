@@ -9,8 +9,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_info'])) {
     $uniqueCode = $qrModel->generateUniqueCode(); 
     $logoPath = null;
     //yonlendirme yapilacak sayfa
-    $qrbaselink = "https://www.youtube.com/";    
-    //http://localhost/redirect.php?code=
+    $qrbaselink = "http://localhost/redirect.php?code=$uniqueCode";    
+    //
     if (isset($_FILES['logo']) && $_FILES['logo']['error'] === UPLOAD_ERR_OK) {
         $logoTmpName = $_FILES['logo']['tmp_name'];
         $logoExtension = pathinfo($_FILES['logo']['name'], PATHINFO_EXTENSION);
