@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_info'])) {
     $uniqueCode = $qrModel->generateUniqueCode(); 
     $logoPath = null;
     //yonlendirme yapilacak sayfa
-    $qrbaselink = "$uniqueCode";    
+    $qrbaselink = "https://www.youtube.com/";    
     //http://localhost/redirect.php?code=
     if (isset($_FILES['logo']) && $_FILES['logo']['error'] === UPLOAD_ERR_OK) {
         $logoTmpName = $_FILES['logo']['tmp_name'];
@@ -28,9 +28,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_info'])) {
         exit();
     }
     //$result = $qrModel->createQRCodeWithLogo($qrbaselink, $qrImagePath, $logoPath);
-    $result = $qrModel->createQRCodeWithLogo($qrbaselink, $logoPath);
-    if ($result) {
-        $qrModel->saveQrCode($uniqueCode, $result, $description, $qrlink, "test");
+    $result_png = $qrModel->createQRCodeWithLogo($qrbaselink, $logoPath);
+    $result_svg = $qrModel->createQRCodeSvg($qrbaselink);
+    if ($result_png&&$result_svg) {
+        $qrModel->saveQrCode($uniqueCode, $result_png,$result_svg, $description, $qrlink, "test");
         header('Location: index.php?status=success&code=' . urlencode($uniqueCode));
     } else {
         header('Location: index.php?status=error');

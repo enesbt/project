@@ -70,7 +70,8 @@ unset($qrModel);
             <thead>
                 <tr>
                     <th>Oluşturulma Tarihi</th>
-                    <th>QR Kod Yolu</th>
+                    <th>QR Kod Png</th>
+                    <th>QR Kod Svg</th>
                     <th>Açıklama</th>
                     <th>Kod</th>
                     <th>Link</th>
@@ -84,7 +85,10 @@ unset($qrModel);
                     <tr>
                         <td><?php echo htmlspecialchars($record['created_at']); ?></td>
                         <td>
-                            <a href="download.php?code=<?php echo urlencode($record['unique_code']); ?>" class="btn btn-info">QR Kodunu İndir (PNG)</a>
+                            <a href="download.php?code=<?php echo urlencode($record['unique_code']); ?>&format=png"  class="btn btn-info">QR Kodunu İndir (PNG)</a>
+                        </td>
+                        <td>
+                            <a href="download.php?code=<?php echo urlencode($record['unique_code']); ?>&format=svg"  class="btn btn-info">QR Kodunu İndir (SVG)</a>
                         </td>
                         <td><?php echo htmlspecialchars($record['description']); ?></td>
                         <td><?php echo htmlspecialchars($record['unique_code']); ?></td>
