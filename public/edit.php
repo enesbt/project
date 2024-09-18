@@ -1,11 +1,11 @@
 <?php
 session_start();
-require_once '../src/Models/QrModel.php';
+require_once '../src/Models/QrCodeManager.php';
 
 $uniqueCode = isset($_GET['unique_code']) ? $_GET['unique_code'] : null;
 if ($uniqueCode) {
-    $qrModel = new QrModel();
-    $record = $qrModel->getQRCodeByUniqueCode($uniqueCode);
+    $qrManager = new QrCodeManager();
+    $record = $qrManager->getQRCodeByUniqueCode($uniqueCode);
     if (!$record) {
         header('Location: index.php?status=error&message=Geçersiz QR kodu.');
         exit();
@@ -18,7 +18,6 @@ if (!$record) {
     header('Location: index.php?status=error&message=Kayıt bulunamadı.');
     exit();
 }
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_info'])) {
     $qrlink = $_POST['qrlink'];
     $description = $_POST['description'];
@@ -32,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_info'])) {
         exit();
     }
     // update database
-    $updateResult = $qrModel->updateQRCode($uniqueCode, $description, $qrlink);
+    $updateResult = $qrManager->updateQRCode($uniqueCode, $description, $qrlink);
     if ($updateResult) {
         header('Location: index.php?status=success&code=' . urlencode($uniqueCode));
     } else {

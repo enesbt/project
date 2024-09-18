@@ -1,25 +1,20 @@
 <?php include '../includes/_header.php'; ?>
-
 <?php
+require_once '../src/Models/QrCodeManager.php';
 session_start();
 $uniqueCode = $_GET['code'] ?? null;
 $status = $_GET['status'] ?? null;
 $filePath = $_GET['file'] ?? null;
 $search = $_GET['search'] ?? null;
-
-require_once '../src/Models/QrModel.php';
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $recordsPerPage = 10; // Her sayfada gösterilecek kayıt sayısı
-
-$qrModel = new QrModel();
-$totalRecords = $qrModel->getTotalRecords($search); 
+$qrManager = new QrCodeManager();
+$totalRecords = $qrManager->getTotalRecords($search); 
 $totalPages = ceil($totalRecords / $recordsPerPage); 
-
 $start = ($page - 1) * $recordsPerPage;
-$records = $qrModel->getRecords($start, $recordsPerPage,$search); 
-unset($qrModel);
+$records = $qrManager->getRecords($start, $recordsPerPage,$search); 
+unset($qrManager);
 ?>
-
 <div class = "container mt-5">
     <div class="jumbotron text-center">
             <h1>IWA Bot'a hoş geldiniz, <span class="username"><?= $_SESSION['user_info']['name'] ?? 'Misafir' ?></span></h1>
@@ -45,9 +40,6 @@ unset($qrModel);
             </div>
         </div>
     </div>
-
-
-
     <?php if ($status === 'success') : ?>
         <script>
                 document.addEventListener('DOMContentLoaded', function() {
@@ -64,8 +56,6 @@ unset($qrModel);
                 });
         </script>
     <?php endif; ?>
-
-
     <table class="table table-bordered mt-5">
             <thead>
                 <tr>
@@ -102,7 +92,6 @@ unset($qrModel);
                 <?php endforeach; ?>
             </tbody>
     </table>
-
     <nav aria-label="Page navigation">
         <ul class="pagination">
             <?php if ($page > 1) : ?>
@@ -126,5 +115,4 @@ unset($qrModel);
             <?php endif; ?>
         </ul>
     </nav>
-
 </div>

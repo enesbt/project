@@ -1,18 +1,15 @@
 <?php
-require_once '../src/Models/QrModel.php';
-
+require_once '../src/Models/QrCodeManager.php';
 if (isset($_GET['code']) && isset($_GET['format'])) {
-    $qrModel = new QrModel();
+    $qrManager = new QrCodeManager();
     $uniqueCode = $_GET['code'];
     $format = $_GET['format'];
-
-    // Validate the format
     if (!in_array($format, ['png', 'svg'])) {
         echo "Invalid format. Please specify 'png' or 'svg'.";
         exit;
     }
-
-    $base64Image = $qrModel->getQRCodeBase64($uniqueCode, $format);
+    $base64Image = $qrManager->getQRCodeBase64($uniqueCode, $format);
+    unset($qrModel);
     if ($base64Image) {
         if($format=='svg')
             $base64Image = str_replace('data:image/' . $format . '+xml;base64,', '', $base64Image);
@@ -24,19 +21,13 @@ if (isset($_GET['code']) && isset($_GET['format'])) {
             echo "Base64 data could not be decoded.";
             exit;
         }
-
         header('Content-Type: image/' . $format);
         header('Content-Disposition: attachment; filename="' . $uniqueCode . '.' . $format . '"');
         header('Content-Length: ' . strlen($imageData));
         echo $imageData;
         exit;
-    } else {
+    } else
         echo "Image not found.";
-    }
-} else {
+} else
     echo "Code or format not specified.";
-}
-
-unset($qrModel);
-
 ?>

@@ -8,15 +8,9 @@ use chillerlan\QRCode\Output\QRGdImagePNG;
 use chillerlan\QRCode\Data\QRMatrix;
 use chillerlan\QRCode\Common\EccLevel;
 use chillerlan\QRCode\Output\QRCodeOutputException;
-
 use chillerlan\QRCode\Output\QRMarkupSVG;
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-
 class QRImageWithLogo extends QRGdImagePNG{
-
     public function dump(string|null $file = null, string|null $logo = null): string {
         $this->options->returnResource = true;
         if ($logo !== null) {
@@ -156,7 +150,7 @@ class QrModel{
         $options->version              = 5;
         $options->outputBase64         = true;
         $options->svgUseFillAttributes = false;
-        $options->drawCircularModules  = false;
+        $options->drawCircularModules  = true;
         $options->circleRadius         = 0.4;
         $options->connectPaths         = true;
         $options->keepAsSquare         = [
@@ -184,7 +178,7 @@ class QrModel{
         $options->outputBase64 = true;
         $options->scale = 50;
         $options->imageTransparent = false;
-        $options->drawCircularModules = false;
+        $options->drawCircularModules = true;
         $options->circleRadius = 0.5;
         $options->keepAsSquare = [
             QRMatrix::M_FINDER,

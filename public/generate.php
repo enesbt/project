@@ -1,23 +1,21 @@
 <?php
 session_start();
-require_once '../src/Models/QrModel.php';
+require_once '../src/Models/Qr.php';
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_info'])) {
-    $qrModel = new QrModel();
     $qrlink = $_POST['qrlink']; 
-    $description = $_POST['description']; 
-    $uniqueCode = $qrModel->generateUniqueCode(); 
+    $description = $_POST['description'];  
     $logoPath = null;
-    //yonlendirme yapilacak sayfa
-    $qrbaselink = "http://localhost/redirect.php?code=$uniqueCode";    
-    //
+    $qr = new Qr($description,$qrlink,"user",$logoPath);
+    $uniqueCode = $qr->getUniqueCode();
     if (isset($_FILES['logo']) && $_FILES['logo']['error'] === UPLOAD_ERR_OK) {
         $logoTmpName = $_FILES['logo']['tmp_name'];
         $logoExtension = pathinfo($_FILES['logo']['name'], PATHINFO_EXTENSION);
         $logoPath = "../storage/tmp/logo.$uniqueCode.$logoExtension";
-        if (in_array($logoExtension, ['png'])) {
+        if (in_array($logoExtension, ['png']))
             move_uploaded_file($logoTmpName, $logoPath);
-        }
     } 
     if (empty($qrlink) || empty($description)) {
         header('Location: generate.php?status=error&message=Link ve açıklama boş bırakılamaz.');
@@ -27,28 +25,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_info'])) {
         header('Location: generate.php?status=error&message=Geçerli bir URL giriniz.');
         exit();
     }
-    //$result = $qrModel->createQRCodeWithLogo($qrbaselink, $qrImagePath, $logoPath);
-    $result_png = $qrModel->createQRCodeWithLogo($qrbaselink, $logoPath);
-    $result_svg = $qrModel->createQRCodeSvg($qrbaselink);
-    if ($result_png&&$result_svg) {
-        $qrModel->saveQrCode($uniqueCode, $result_png,$result_svg, $description, $qrlink, "test");
+    if ($qr->setLogoPath($logoPath))
+        $qr->setLogoPath($logoPath);
+
+    if($qr->saveQrCode())
         header('Location: index.php?status=success&code=' . urlencode($uniqueCode));
-    } else {
-        header('Location: index.php?status=error');
-    }
-
-    // if ($result) {
-    //     header('Location: index.php?status=success&code=' . urlencode($uniqueCode) . '&file=' . urlencode($qrImagePath));
-    //     $qrModel->saveQrCode($uniqueCode, $qrImagePath, $description, $qrlink, "test");
-
-    // } else {
-    //     header('Location: index.php?status=error');
-    // }
+    else
+        header('Location: index.php?status=error&message=QR kod kaydedilemedi.');
     unset($qrModel);
     exit();
 }
 ?>
-
 <?php include '../includes/_header.php'; ?>
 
     <body>
